@@ -1,0 +1,88 @@
+{% extends "nav.html" %}
+{% block nav %}
+
+
+
+<section>
+	<div class="block remove-bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="account-popup-area signup-popup-box static">
+						<div class="account-popup">
+							<h3>Sign In</h3>
+							<span>Somali-Freelance-Code-Community</span>
+						
+							<form method="POST" action="">
+								{{form.hidden_tag()}}
+								{% with messages=get_flashed_messages(with_categories=true) %}
+								{% if messages %}
+								{% for category,message in messages %}
+									<div class="alert alert-{{category}}">
+										{{message}}
+									</div>
+									{% endfor %}
+									{% endif %}
+									{% endwith %}
+									
+								<div class="form-group">
+									{{form.email.label(class="")}}
+									{% if form.email.errors %}
+										{{form.email(class="form-control form-control-lg is-invalid")}}
+										<div class="invalid-feedback">
+											{% for error in form.email.errors %}
+											<input type="text" name="somithing">
+												<span>{{error}}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{form.email}}
+									{% endif %}
+									
+									<i class="la la-envelope-o"></i>
+								</div>
+								<div class="form-group">
+									{{form.password.label(class="")}}
+									{% if form.password.errors %}
+										{{form.password(class="form-control form-control-lg is-invalid")}}
+										<div class="invalid-feedback">
+											{% for error in form.password.errors %}
+												<span>{{error}}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{form.password}}
+									{% endif %}
+									<i class="la la-key"></i>
+								</div>
+								<p class="remember-label">
+								
+									{{form.remember(class="form-check-input")}}
+									{{form.remember.label(class="form-check-label")}}
+								</p><br>
+					
+								{{form.submit(class="btn btn-primary")}}
+							</form>
+					
+
+
+
+							<div class="extra-login">
+								<span>Or</span>
+								<div class="login-social">
+									<a class="fb-login" href="#" title=""><i class="fa fa-facebook"></i></a>
+									<a class="tw-login" href="#" title=""><i class="fa fa-twitter"></i></a>
+								</div>
+							</div>
+						</div>
+					</div><!-- SIGNUP POPUP -->
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+	
+
+
+
+{% endblock nav %}
