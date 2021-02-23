@@ -167,8 +167,8 @@
 					<a href="#" title="" class="post-job-btn"><i class="la la-plus"></i>Post Jobs</a>
 					{% if current_user.is_authenticated %}
 					<ul class="account-btns">
-						<li><a href=""><i class="la la-key"></i> {{current_user.username}}</a></li>
-					<li><a href="{{url_for('logout ')}}"><i class="la la-external-link-square"></i> Logout</a></li>
+						<li><a href="{{url_for('account')}}"><i class="la la-key"></i> {{current_user.username}}</a></li>
+					<li><a href="{{url_for('logout')}}"><i class="la la-external-link-square"></i> Logout</a></li>
 					</ul>
 					{% else %}
 					<ul class="account-btns">

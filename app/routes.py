@@ -1,9 +1,14 @@
+
 from .models import User,Post
 from flask import flash,render_template,request,redirect,url_for
-from .forms import RegistrationForm,LoginForm
+from .forms import RegistrationForm,LoginForm,UpdateProfileForm
 from app import app,db,bcrypt
 from app import login_manager
-from flask_login import login_user,current_user,logout_user
+from flask_login import login_user,current_user,logout_user,login_required
+import os,secrets
+
+
+
 
 @app.route('/',methods=['POST','GET'])
 def home():
@@ -39,12 +44,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password,form.password.data):
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user,remember=form.remember.data)
-            return redirect(url_for('home'))
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
             flash(f'Welcome {form.email.data}','success')
         else:
-            flash('LOgin Unseccessful','danger')
+            flash('Email Or Password Incorrect','danger')
         
     return render_template('login.html',form=form,title='Login')
 
@@ -57,3 +63,35 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
+
+def save_pic(form_picture):
+    rando_hex = secrets.token_hex(8)
+    _,f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = rando_hex + f_ext
+    picture_path = os.path.join(app.root_path,'static/profile_pic',picture_fn)
+    form_picture.save(picture_path)
+    return picture_fn
+
+
+
+
+@app.route('/account',methods=['POST','GET'])
+@login_required 
+def account():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file= save_pic(form.picture.data)
+            current_user.image_file = picture_file
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your Account has been updated successfully ','success')
+        return redirect(url_for('account'))
+
+    elif request.method=='GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    image_file = url_for('static',filename='profile_pic/'+current_user.image_file)
+    return render_template('candidates_profile.html',title='Account',image_file=image_file,form=form)
