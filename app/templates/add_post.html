@@ -1,0 +1,138 @@
+{% extends "nav.html" %}
+{% block nav %}
+
+
+	<section class="overlape">
+		<div class="block no-padding">
+			<div data-velocity="-.1" style="background: url(images/resource/mslider1.jpg) repeat scroll 50% 422.28px transparent;" class="parallax scrolly-invisible no-parallax"></div><!-- PARALLAX BACKGROUND IMAGE -->
+			<div class="container fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="inner-header">
+							<h3>Welcome ALI TUFAN</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="block no-padding">
+			<div class="container">
+				 <div class="row no-gape">
+				 	<aside class="col-lg-3 column border-right">
+				 		<div class="widget">
+				 			<div class="tree_widget-sec">
+				 				<ul>
+				 					<li><a href="candidates_profile.html" title=""><i class="la la-file-text"></i>My Profile</a></li>
+									<li><a href="candidates_my_resume.html" title=""><i class="la la-briefcase"></i>My Resume</a></li>
+									<li><a href="candidates_shortlist.html" title=""><i class="la la-money"></i>Shorlisted Job</a></li>
+									<li><a href="candidates_applied_jobs.html" title=""><i class="la la-paper-plane"></i>Applied Job</a></li>
+									<li><a href="candidates_job_alert.html" title=""><i class="la la-user"></i>Job Alerts</a></li>
+									<li><a href="candidates_cv_cover_letter.html" title=""><i class="la la-file-text"></i>Cv & Cover Letter</a></li>
+									<li><a href="candidates_change_password.html" title=""><i class="la la-flash"></i>Change Password</a></li>
+									<li><a href="#" title=""><i class="la la-unlink"></i>Logout</a></li>
+				 				</ul>
+				 			</div>
+				 		</div>
+				 		<div class="widget">
+				 			<div class="skill-perc">
+				 				<h3>Skills Percentage </h3>
+				 				<p>Put value for "Cover Image" field to increase your skill up to "15%"</p>
+				 				<div class="skills-bar">
+				 					<div 
+				 						class="second circle" 
+				 						data-size="155"
+				 						data-thickness="60">
+								    </div>
+				 				</div>
+				 			</div>
+				 		</div>
+				 	</aside>
+				 	<div class="col-lg-9 column">
+				 		<div class="padding-left">
+					 		<div class="manage-jobs-sec">
+					 			<h3>Add Your Post Here</h3>
+						 		<div class="change-password">
+
+
+                                    <form method="POST" action="" enctype="multipart/form-data">
+                                        {{form.hidden_tag()}}
+                                        {% with messages=get_flashed_messages(with_categories=true) %}
+                                        {% if messages %}
+                                        {% for category,message in messages %}
+                                            <div class="alert alert-{{category}}">
+                                                {{message}}
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
+                                            
+                                        <div class="form-group">
+                                            {{form.title.label(class="")}}
+                                            {% if form.title.errors %}
+                                                {{form.title(class="form-control form-control-lg is-invalid")}}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.title.errors %}
+                                                    <input type="text" name="somithing">
+                                                        <span>{{error}}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{form.title}}
+                                            {% endif %}
+                                            
+                                        
+                                        </div>
+                                        <div class="form-group">
+                                            {{form.content.label(class="")}}
+                                            {% if form.content.errors %}
+                                                {{form.content(class="form-control form-control-lg is-invalid")}}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.content.errors %}
+                                                        <span>{{error}}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{form.content}}
+                                            {% endif %}
+                                     
+                                        </div>
+                                       
+									<div class="col-md-6" style="margin-top: 30px;">
+										
+										{{form.picture.label}}
+										{% if form.picture.errors %}
+									 	{{form.picture(class="form-control form-control-lg is-invalid")}}
+									  <div  class="invalid-feedback">
+										{% for error in form.picture.errors %}
+										{{error}}.
+										{% endfor %}
+									  </div>
+									  {% else %}
+									  {{form.picture(class="upload-info")}}
+									  {% endif %}
+									</div>
+									
+                                        <div class="col-md-6">
+                                        {{form.submit(class="btn btn-primary")}}
+                                    </div>
+                                    </form>
+                            
+
+                                    
+
+
+						 		</div>
+					 		</div>
+					 	</div>
+					</div>
+				 </div>
+			</div>
+		</div>
+	</section>
+
+
+
+{% endblock nav %}

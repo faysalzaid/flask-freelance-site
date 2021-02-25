@@ -1,5 +1,5 @@
 from flask_wtf  import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,SubmitField,BooleanField
+from wtforms import StringField,PasswordField,SubmitField,SubmitField,BooleanField,TextAreaField
 from wtforms.validators import DataRequired,Length,Email,EqualTo,ValidationError
 from app.models import User
 from flask_login import current_user
@@ -63,3 +63,13 @@ class UpdateProfileForm(FlaskForm):
                 user = User.query.filter_by(email=email.data).first()
                 if user:
                     raise ValidationError('This email is already taken')
+
+
+
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title',validators=[DataRequired(),Length(max=100,min=5)])
+    content = TextAreaField('Content',validators=[DataRequired()])
+    picture = FileField('Choose Picture for Your Post',validators=[FileAllowed(['png','jpg'])])
+    submit = SubmitField('Add')

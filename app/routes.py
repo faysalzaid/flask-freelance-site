@@ -1,7 +1,7 @@
 
 from .models import User,Post
 from flask import flash,render_template,request,redirect,url_for
-from .forms import RegistrationForm,LoginForm,UpdateProfileForm
+from .forms import RegistrationForm,LoginForm,UpdateProfileForm,PostForm
 from app import app,db,bcrypt
 from app import login_manager
 from flask_login import login_user,current_user,logout_user,login_required
@@ -73,6 +73,14 @@ def save_pic(form_picture):
     form_picture.save(picture_path)
     return picture_fn
 
+def save_post_pic(form_post_pic):
+    rando_hex = secrets.token_hex(8)
+    _,f_ext = os.path.splitext(form_post_pic.filename)
+    picture_fn = rando_hex + f_ext
+    picture_path = os.path.join(app.root_path,'static/posts',picture_fn)
+    form_post_pic.save(picture_path)
+    return picture_fn
+
 
 
 
@@ -95,3 +103,25 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static',filename='profile_pic/'+current_user.image_file)
     return render_template('candidates_profile.html',title='Account',image_file=image_file,form=form)
+
+
+
+
+
+@app.route('/add_post',methods=['POST','GET'])
+@login_required
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_post_pic(form.picture.data)
+        title = form.title.data
+        content = form.content.data
+        author=current_user
+
+        post = Post(title=title,content=content,author=author,image_file=picture_file)
+        db.session.add(post)
+        db.session.commit()
+        flash("Your post has been created",'success')
+        return redirect(url_for('home'))
+    return render_template('add_post.html',form=form)
