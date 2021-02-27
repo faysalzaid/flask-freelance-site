@@ -1,13 +1,12 @@
 
 from .models import User,Post
-from flask import flash,render_template,request,redirect,url_for
+from flask import flash,render_template,request,redirect,url_for,abort
 from .forms import RegistrationForm,LoginForm,UpdateProfileForm,PostForm
 from app import app,db,bcrypt
 from app import login_manager
 from flask_login import login_user,current_user,logout_user,login_required
 import os,secrets
-
-
+from PIL import Image
 
 
 @app.route('/',methods=['POST','GET'])
@@ -78,7 +77,12 @@ def save_post_pic(form_post_pic):
     _,f_ext = os.path.splitext(form_post_pic.filename)
     picture_fn = rando_hex + f_ext
     picture_path = os.path.join(app.root_path,'static/posts',picture_fn)
-    form_post_pic.save(picture_path)
+
+    output_size = (834,340)
+    i = Image.open(form_post_pic)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    # form_post_pic.save(picture_path)
     return picture_fn
 
 
@@ -117,11 +121,49 @@ def add_post():
             picture_file = save_post_pic(form.picture.data)
         title = form.title.data
         content = form.content.data
-        author=current_user
+        author = current_user
 
         post = Post(title=title,content=content,author=author,image_file=picture_file)
         db.session.add(post)
         db.session.commit()
         flash("Your post has been created",'success')
-        return redirect(url_for('home'))
-    return render_template('add_post.html',form=form)
+        return redirect(url_for('posts'))
+    return render_template('add_post.html',form=form,legend='Add Post')
+
+
+
+@app.route('/posts',methods=['POST','GET'])
+def posts():
+    posts = Post.query.all()
+    return render_template('blog_list.html',posts=posts)
+
+
+@app.route("/post/<post_id>")
+def post_detail(post_id):
+    post = Post.query.get(post_id)
+    return render_template('blog_single.html',title=post.title,post=post)
+
+
+
+
+@app.route("/post/<post_id>/update",methods=['POST','GET'])
+def post_update(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:     
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file= save_post_pic(form.picture.data)
+            post.image_file  = picture_file        
+        post.title=form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('You blog has been updated successfully....')
+        return redirect(url_for('post_detail',post_id=post.id))
+    elif request.method =='GET':
+        form.title.data = post.title
+        form.content.data = post.content
+        form.picture.data = post.image_file
+    return render_template('add_post.html',title="Update Post",post=post,form=form,legend='Update Post')
+
