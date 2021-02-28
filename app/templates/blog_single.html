@@ -10,7 +10,8 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="inner-header">
-							<h3>Blog</h3>
+							<h3>Blog-{{post.title}}</h3>
+							
 						</div>
 					</div>
 				</div>
@@ -19,14 +20,28 @@
 	</section>
 
 	<section>
+		{% with messages=get_flashed_messages(with_categories=true) %}
+									{% if messages %}
+									{% for category,message in messages %}
+									<center>
+										<div class="alert alert-{{category}} mt-5" style="width: 20%;">
+											{{message}}
+										</div>
+									</center>
+										{% endfor %}
+										{% endif %}
+										{% endwith %}
 		<div class="block">
 			<div class="container">
 				 <div class="row">
 				 	<div class="col-lg-9 column">
 				 		<div class="blog-single">
 				 			<div class="bs-thumb"><img src="{{url_for('static',filename='posts/'+post.image_file)}}" alt="" /></div>
-				 			<ul class="post-metas"><li><a href="#" title=""><img style="width: 10%;" src="{{url_for('static',filename='profile_pic/'+post.author.image_file)}}" alt="" />Ali TUFAN</a></li><li><a href="#" title=""><i class="la la-calendar-o"></i>November 23, 2017</a></li><li><a class="metascomment" href="#" title=""><i class="la la-comments"></i>4 comments</a></li><li><a href="#" title=""><i class="la la-file-text"></i>Travel, Skill, Jobs</a></li></ul>
-				 			<h2>11 Tips to Help You Get New Clients Through Cold Calling</h2>
+				 			<ul class="post-metas"><li><a href="#" title=""><img style="width: 10%;" src="{{url_for('static',filename='profile_pic/'+post.author.image_file)}}" alt="" />{{post.author.username}}</a></li>{% if current_user == post.author %}<li> <a href="{{url_for('post_update',post_id=post.id)}}"><button class="btn  btn-info btn-sm m-1">Change</button></a></li><li><button class="btn  btn-danger btn-sm m-1" data-toggle="modal" data-target="#exampleModal">Delete</button></li>{% endif %}<li><a href="#" title=""><i class="la la-calendar-o"></i>November 23, 2017</a></li><li><a class="metascomment" href="#" title=""><i class="la la-comments"></i>4 comments</a></li><li><a href="#" title=""><i class="la la-file-text"></i>Travel, Skill, Jobs</a></li></ul>
+				 			<h2>{{post.title}}</h2><br>
+							 
+							
+							 
 				 			<p>Far much that one rank beheld bluebird after outside ignobly allegedly more when oh arrogantly vehement irresistibly fussy penguin insect additionally wow absolutely crud meretriciously hastily dalmatian a glowered inset one echidna cassowary some parrot and much as goodness some froze the sullen much connected bat wonderfully on instantaneously eel valiantly petted this along across highhandedly much. </p>
 				 			<p>Repeatedly dreamed alas opossum but dramatically despite expeditiously that jeepers loosely yikes that as or eel underneath kept and slept compactly far purred sure abidingly up above fitting to strident wiped set waywardly far the and pangolin horse approving paid chuckled cassowary oh above a much opposite far much hypnotically more therefore wasp less that hey apart well like while superbly orca and far hence one.Far much that one rank beheld bluebird after outside ignobly allegedly more when oh arrogantly vehement irresistibly fussy.</p>
 				 			<h3>About Business Network</h3>
@@ -231,6 +246,28 @@
 			</div>
 		</div>
 	</section>
+
+
+
+
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			  <form action="{{url_for('post_delete',post_id=post.id)}}" method="POST"><input type="submit" class="btn btn-danger" value="Delete"></form>
+			</div>
+		  </div>
+		</div>
+	  </div>
 
 
 

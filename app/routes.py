@@ -159,7 +159,7 @@ def post_update(post_id):
         post.title=form.title.data
         post.content = form.content.data
         db.session.commit()
-        flash('You blog has been updated successfully....')
+        flash('You blog has been updated successfully....','success')
         return redirect(url_for('post_detail',post_id=post.id))
     elif request.method =='GET':
         form.title.data = post.title
@@ -167,3 +167,15 @@ def post_update(post_id):
         form.picture.data = post.image_file
     return render_template('add_post.html',title="Update Post",post=post,form=form,legend='Update Post')
 
+
+
+
+@app.route("/post/<post_id>/delete",methods=['POST'])
+def post_delete(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:     
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post has been deleted successfully','success')
+    return redirect(url_for('posts'))
